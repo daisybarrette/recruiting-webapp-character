@@ -36,6 +36,7 @@
 
 .App-column {
     border: 2px solid white;
+    padding: 1em;
 }
 
 .characterClass {

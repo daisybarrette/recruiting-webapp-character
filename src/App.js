@@ -46,6 +46,10 @@ function App() {
         setClassStatus(updatedClassStatus);
     }, [attributeValues]);
 
+    function MinimumRequirements({ characterClass }) {
+        return <h2>{`Minimum Requirements for ${characterClass}`}</h2>;
+    }
+
     return (
         <div className='App'>
             <header className='App-header'>
@@ -75,6 +79,10 @@ function App() {
                             </div>
                         );
                     })}
+                </div>
+
+                <div className='App-column'>
+                    <MinimumRequirements characterClass={'bard'} />
                 </div>
             </section>
         </div>
