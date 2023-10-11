@@ -9,6 +9,8 @@ function App() {
         Object.keys(CLASS_LIST).reduce((acc, currentValue) => ({ ...acc, [currentValue]: 'disabled' }), {})
     );
 
+    const [selectedCharacterClass, setSelectedCharacterClass] = useState(null);
+
     function handleUpdateAttributeValue(attribute, offset = 1) {
         const updatedAttributeValues = [...attributeValues];
 
@@ -46,8 +48,12 @@ function App() {
         setClassStatus(updatedClassStatus);
     }, [attributeValues]);
 
-    function MinimumRequirements({ characterClass }) {
-        return <h2>{`Minimum Requirements for ${characterClass}`}</h2>;
+    function handleCharacterClassClick(characterClass) {
+        if (selectedCharacterClass === characterClass) {
+            setSelectedCharacterClass(null);
+        } else {
+            setSelectedCharacterClass(characterClass);
+        }
     }
 
     return (
@@ -75,18 +81,24 @@ function App() {
                                 key={characterClass}
                                 className={charClassName}
                             >
-                                {characterClass}
+                                <button onClick={() => handleCharacterClassClick(characterClass)}>
+                                    {characterClass}
+                                </button>
                             </div>
                         );
                     })}
                 </div>
 
                 <div className='App-column'>
-                    <MinimumRequirements characterClass={'bard'} />
+                    <MinimumRequirements characterClass={selectedCharacterClass} />
                 </div>
             </section>
         </div>
     );
+}
+
+function MinimumRequirements({ characterClass }) {
+    return <h2>{`Minimum Requirements for ${characterClass}`}</h2>;
 }
 
 function getAttributeValue(attribute, attributeList) {
