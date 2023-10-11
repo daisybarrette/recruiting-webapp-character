@@ -12,13 +12,42 @@ function App() {
 
         const attributeIndex = updatedAttributeValues.findIndex((element) => Object.keys(element).includes(attribute));
 
+        // don't need?
         const attributeToUpdate = updatedAttributeValues[attributeIndex];
 
         console.log('attributeToUpdate', attributeToUpdate);
 
-        updatedAttributeValues[attribute] = updatedAttributeValues[attribute] + 1;
+        updatedAttributeValues[attributeIndex] = {
+            [attribute]: updatedAttributeValues[attributeIndex][attribute] + 1,
+        };
 
         setAttributeValues(updatedAttributeValues);
+    }
+
+    // TODO: combine with increment function
+    function handleDecrementAttribute(attribute) {
+        console.log('incrementing attribute: ', attribute);
+        const updatedAttributeValues = [...attributeValues];
+
+        const attributeIndex = updatedAttributeValues.findIndex((element) => Object.keys(element).includes(attribute));
+
+        // don't need?
+        const attributeToUpdate = updatedAttributeValues[attributeIndex];
+
+        console.log('attributeToUpdate', attributeToUpdate);
+
+        updatedAttributeValues[attributeIndex] = {
+            [attribute]: updatedAttributeValues[attributeIndex][attribute] - 1,
+        };
+
+        setAttributeValues(updatedAttributeValues);
+    }
+
+    function getAttributeValue(attribute) {
+        const attributeIndex = attributeValues.findIndex((element) => Object.keys(element).includes(attribute));
+
+        console.log('attribute value: ', attributeValues[attributeIndex][attribute]);
+        return attributeValues[attributeIndex][attribute];
     }
 
     console.log('attributeValues', attributeValues);
@@ -39,9 +68,9 @@ function App() {
                     <h2>Attributes</h2>
                     {ATTRIBUTE_LIST.map((attribute) => (
                         <div key={attribute}>
-                            {attribute}: {num}
+                            {attribute}: {getAttributeValue(attribute)}
                             <button onClick={() => handleIncrementAttribute(attribute)}>+</button>
-                            <button>-</button>
+                            <button onClick={() => handleDecrementAttribute(attribute)}>-</button>
                         </div>
                     ))}
                 </div>
