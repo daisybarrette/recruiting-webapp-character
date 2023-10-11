@@ -90,7 +90,7 @@ function App() {
                 </div>
 
                 <div className='App-column'>
-                    <MinimumRequirements characterClass={selectedCharacterClass} />
+                    {!selectedCharacterClass ? <></> : <MinimumRequirements characterClass={selectedCharacterClass} />}
                 </div>
             </section>
         </div>
@@ -98,7 +98,19 @@ function App() {
 }
 
 function MinimumRequirements({ characterClass }) {
-    return <h2>{`Minimum Requirements for ${characterClass}`}</h2>;
+    return (
+        <>
+            <h2>{`Minimum Requirements for ${characterClass}`}</h2>
+
+            <ul>
+                {Object.keys(CLASS_LIST[characterClass]).map((attribute) => (
+                    <li key={attribute}>
+                        {attribute}: {CLASS_LIST[characterClass][attribute]}
+                    </li>
+                ))}
+            </ul>
+        </>
+    );
 }
 
 function getAttributeValue(attribute, attributeList) {

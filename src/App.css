@@ -39,6 +39,10 @@
     padding: 1em;
 }
 
+.App-column ul {
+    list-style-type: none;
+}
+
 .characterClass {
     background-color: darkblue;
 }
