@@ -5,6 +5,10 @@ import { ATTRIBUTE_LIST, CLASS_LIST, SKILL_LIST } from './consts.js';
 function App() {
     const [attributeValues, setAttributeValues] = useState(ATTRIBUTE_LIST.map((attribute) => ({ [attribute]: 0 })));
 
+    const [attributeModifierValues, setAttributeModifierValues] = useState(
+        ATTRIBUTE_LIST.reduce((acc, currentValue) => ({ ...acc, [currentValue]: 0 }), {})
+    );
+
     const [classStatus, setClassStatus] = useState(
         Object.keys(CLASS_LIST).reduce(
             (acc, currentValue) => ({ ...acc, [currentValue]: CLASS_STATUS_OPTIONS.DISABLED }),
@@ -13,6 +17,8 @@ function App() {
     );
 
     const [selectedCharacterClass, setSelectedCharacterClass] = useState(null);
+
+    console.log('attributeModifierValues', attributeModifierValues);
 
     useEffect(() => {
         const characterClasses = Object.keys(CLASS_LIST);
