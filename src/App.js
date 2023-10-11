@@ -21,21 +21,7 @@ function App() {
         setAttributeValues(updatedAttributeValues);
     }
 
-    function getAttributeValue(attribute) {
-        const attributeIndex = attributeValues.findIndex((element) => Object.keys(element).includes(attribute));
-
-        return attributeValues[attributeIndex][attribute];
-    }
-
     useEffect(() => {
-        // TODO: Wrap getAttributeValue in useCallback so it's not a dependency, or rework so it takes
-        // attributes as a parameter
-        function getAttributeValueLOCAL(attribute) {
-            const attributeIndex = attributeValues.findIndex((element) => Object.keys(element).includes(attribute));
-
-            return attributeValues[attributeIndex][attribute];
-        }
-
         const characterClasses = Object.keys(CLASS_LIST);
 
         let updatedClassStatus = {};
@@ -47,7 +33,7 @@ function App() {
             const firstFailingAttribute = Object.keys(CLASS_LIST[characterClass]).find((attribute) => {
                 const minValue = CLASS_LIST[characterClass][attribute];
 
-                return getAttributeValueLOCAL(attribute) < minValue;
+                return getAttributeValue(attribute, attributeValues) < minValue;
             });
 
             if (firstFailingAttribute) {
@@ -70,7 +56,7 @@ function App() {
                     <h2>Attributes</h2>
                     {ATTRIBUTE_LIST.map((attribute) => (
                         <div key={attribute}>
-                            {attribute}: {getAttributeValue(attribute)}
+                            {attribute}: {getAttributeValue(attribute, attributeValues)}
                             <button onClick={() => handleUpdateAttributeValue(attribute)}>+</button>
                             <button onClick={() => handleUpdateAttributeValue(attribute, -1)}>-</button>
                         </div>
@@ -93,6 +79,12 @@ function App() {
             </section>
         </div>
     );
+}
+
+function getAttributeValue(attribute, attributeList) {
+    const attributeIndex = attributeList.findIndex((element) => Object.keys(element).includes(attribute));
+
+    return attributeList[attributeIndex][attribute];
 }
 
 export default App;
