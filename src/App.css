@@ -32,6 +32,10 @@
     color: white;
 }
 
+.App-column {
+    border: 2px solid white;
+}
+
 .App-link {
     color: #61dafb;
 }
