@@ -64,9 +64,11 @@ function App() {
             <header className='App-header'>
                 <h1>React Coding Exercise - Daisy Barrette</h1>
             </header>
+
             <section className='App-section'>
                 <div className='App-column'>
                     <h2>Attributes</h2>
+
                     {ATTRIBUTE_LIST.map((attribute) => (
                         <div key={attribute}>
                             {attribute}: {getAttributeValue(attribute, attributeValues)}
@@ -75,6 +77,7 @@ function App() {
                         </div>
                     ))}
                 </div>
+
                 <div className='App-column'>
                     <h2>Classes</h2>
                     {Object.keys(CLASS_LIST).map((characterClass) => {
@@ -92,9 +95,14 @@ function App() {
                     })}
                 </div>
 
-                <div className='App-column'>
-                    {!selectedCharacterClass ? <></> : <MinimumRequirements characterClass={selectedCharacterClass} />}
-                </div>
+                {/* Render the minimum requirements to qualify for a class only if the user has selected a class */}
+                {!selectedCharacterClass ? (
+                    <></>
+                ) : (
+                    <div className='App-column'>
+                        <MinimumRequirements characterClass={selectedCharacterClass} />
+                    </div>
+                )}
             </section>
         </div>
     );
