@@ -32,14 +32,6 @@ export const CLASS_LIST = {
         'Wisdom': 9,
         'Charisma': 14,
     },
-    'TEST': {
-        'Strength': 0,
-        'Dexterity': 0,
-        'Constitution': 0,
-        'Intelligence': 0,
-        'Wisdom': 1,
-        'Charisma': 2,
-    },
 }
 
 export const SKILL_LIST = [
