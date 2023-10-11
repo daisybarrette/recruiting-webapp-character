@@ -9,8 +9,6 @@ function App() {
         Object.keys(CLASS_LIST).reduce((acc, currentValue) => ({ ...acc, [currentValue]: 'disabled' }), {})
     );
 
-    console.log(classStatus);
-
     function handleUpdateAttributeValue(attribute, offset = 1) {
         const updatedAttributeValues = [...attributeValues];
 
@@ -43,24 +41,14 @@ function App() {
         let updatedClassStatus = {};
 
         characterClasses.forEach((characterClass) => {
-            console.log('characterClass', characterClass);
-
             // If a user's values for any attribute are too low, the class is disabled
             // Using .find to quit after finding the first failing attribute rather than checking
             // them all unnecessarily
             const firstFailingAttribute = Object.keys(CLASS_LIST[characterClass]).find((attribute) => {
                 const minValue = CLASS_LIST[characterClass][attribute];
-                // console.log('minValue', minValue);
 
-                // just return this directly
-                const test = getAttributeValueLOCAL(attribute) < minValue;
-
-                // console.log('test', test);
-
-                return test;
+                return getAttributeValueLOCAL(attribute) < minValue;
             });
-
-            console.log('firstFailingAttribute', firstFailingAttribute);
 
             if (firstFailingAttribute) {
                 updatedClassStatus[characterClass] = 'disabled';
@@ -69,7 +57,6 @@ function App() {
             }
         });
 
-        // console.log('****updatedClassStatus', updatedClassStatus);
         setClassStatus(updatedClassStatus);
     }, [attributeValues]);
 
