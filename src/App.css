@@ -30,10 +30,24 @@
     flex: 1 1 0;
     background-color: hsl(220deg 13% 13%);
     color: white;
+
+    display: flex;
 }
 
 .App-column {
     border: 2px solid white;
+}
+
+.characterClass {
+    background-color: darkblue;
+}
+
+.disabled {
+    background-color: red;
+}
+
+.enabled {
+    background-color: darkgreen;
 }
 
 .App-link {
