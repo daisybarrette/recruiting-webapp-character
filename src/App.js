@@ -3,12 +3,14 @@ import './App.css';
 import { ATTRIBUTE_LIST, CLASS_LIST, SKILL_LIST } from './consts.js';
 
 function App() {
+    // TODO: This would probably work better as an object instead of an array
     const [attributeValues, setAttributeValues] = useState(ATTRIBUTE_LIST.map((attribute) => ({ [attribute]: 0 })));
 
     const [attributeModifierValues, setAttributeModifierValues] = useState(
         ATTRIBUTE_LIST.reduce((acc, currentValue) => ({ ...acc, [currentValue]: 0 }), {})
     );
 
+    // Track what class(es) a user is eligible for
     const [classStatus, setClassStatus] = useState(
         Object.keys(CLASS_LIST).reduce(
             (acc, currentValue) => ({ ...acc, [currentValue]: CLASS_STATUS_OPTIONS.DISABLED }),
@@ -16,39 +18,29 @@ function App() {
         )
     );
 
+    // A user can select a class to see the minimum requirements to qualify
+    // null indicates no class has been selected, or a class has been selected and then deselected
     const [selectedCharacterClass, setSelectedCharacterClass] = useState(null);
-
-    console.log('attributeModifierValues', attributeModifierValues);
 
     useEffect(() => {
         let newAttributeModifierValues = {};
 
         ATTRIBUTE_LIST.forEach((attribute) => {
-            console.log('checking ', attribute);
-
             const userAttrValue = getAttributeValue(attribute, attributeValues);
-
-            console.log('---- users value', userAttrValue);
-
-            // Intelligence: 7 -> Intelligence Modifier: -2
-            // Intelligence: 9 -> Intelligence Modifier: -1
-            // Intelligence: 10 -> Intelligence Modifier: 0
-            // Intelligence: 11 -> Intelligence Modifier: 0
-            // Intelligence: 12 -> Intelligence Modifier: 1
-            // Intelligence: 14 -> Intelligence Modifier: 2
-            // Intelligence: 20 -> Intelligence Modifier: 5
 
             /**
              * Note to reviewers: I'm not familiar with this aspect of DND so I looked up a more detailed description of how the modifiers work,
              * and found this, which seems to line up with the README instructions and sample values for Intelligence:
              *
-             * "To determine an ability modifier without consulting the table, subtract 10 from the ability score and then divide the total by 2 (round down)."
+             * "To determine an ability modifier [...] subtract 10 from the ability score and then divide the total by 2 (round down)."
              * https://roll20.net/compendium/dnd5e/Ability%20Scores#content
              */
             const modifierValue = Math.round((userAttrValue - 10) / 2 - 0.5);
-            console.log('---- modifierValue', modifierValue, '\n\n\n');
+
             newAttributeModifierValues[attribute] = modifierValue;
         });
+
+        setAttributeModifierValues(newAttributeModifierValues);
     }, [attributeValues]);
 
     useEffect(() => {
@@ -60,6 +52,8 @@ function App() {
             // If a user's values for any attribute are too low, the class is disabled
             // Using .find to quit after finding the first failing attribute rather than checking
             // them all unnecessarily
+
+            // TODO .some is probably more appropriate for this check
             const firstFailingAttribute = Object.keys(CLASS_LIST[characterClass]).find((attribute) => {
                 const minValue = CLASS_LIST[characterClass][attribute];
 
@@ -76,6 +70,10 @@ function App() {
         setClassStatus(updatedClassStatus);
     }, [attributeValues]);
 
+    /**
+     * Note to reviewers: I didn't realize this initially, but it looks like negative values for attributes are invalid.
+     * If I had more time I would add a check in here to enfore zero (or one?) as the lowest possible value.
+     **/
     function handleUpdateAttributeValue(attribute, offset = 1) {
         const updatedAttributeValues = [...attributeValues];
 
@@ -108,7 +106,8 @@ function App() {
 
                     {ATTRIBUTE_LIST.map((attribute) => (
                         <div key={attribute}>
-                            {attribute}: {getAttributeValue(attribute, attributeValues)}
+                            {attribute}: {getAttributeValue(attribute, attributeValues)} (Modifer:{' '}
+                            {attributeModifierValues[attribute]})
                             <button onClick={() => handleUpdateAttributeValue(attribute)}>+</button>
                             <button onClick={() => handleUpdateAttributeValue(attribute, -1)}>-</button>
                         </div>
