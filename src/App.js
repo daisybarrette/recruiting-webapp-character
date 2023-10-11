@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import './App.css';
 import { ATTRIBUTE_LIST, CLASS_LIST, SKILL_LIST } from './consts.js';
 
@@ -29,6 +29,50 @@ function App() {
         return attributeValues[attributeIndex][attribute];
     }
 
+    useEffect(() => {
+        // TODO: Wrap getAttributeValue in useCallback so it's not a dependency, or rework so it takes
+        // attributes as a parameter
+        function getAttributeValueLOCAL(attribute) {
+            const attributeIndex = attributeValues.findIndex((element) => Object.keys(element).includes(attribute));
+
+            return attributeValues[attributeIndex][attribute];
+        }
+
+        const characterClasses = Object.keys(CLASS_LIST);
+
+        let updatedClassStatus = {};
+
+        characterClasses.forEach((characterClass) => {
+            console.log('characterClass', characterClass);
+
+            // If a user's values for any attribute are too low, the class is disabled
+            // Using .find to quit after finding the first failing attribute rather than checking
+            // them all unnecessarily
+            const firstFailingAttribute = Object.keys(CLASS_LIST[characterClass]).find((attribute) => {
+                const minValue = CLASS_LIST[characterClass][attribute];
+                // console.log('minValue', minValue);
+
+                // just return this directly
+                const test = getAttributeValueLOCAL(attribute) < minValue;
+
+                // console.log('test', test);
+
+                return test;
+            });
+
+            console.log('firstFailingAttribute', firstFailingAttribute);
+
+            if (firstFailingAttribute) {
+                updatedClassStatus[characterClass] = 'disabled';
+            } else {
+                updatedClassStatus[characterClass] = 'enabled';
+            }
+        });
+
+        // console.log('****updatedClassStatus', updatedClassStatus);
+        setClassStatus(updatedClassStatus);
+    }, [attributeValues]);
+
     return (
         <div className='App'>
             <header className='App-header'>
@@ -47,11 +91,16 @@ function App() {
                 </div>
                 <div className='App-column'>
                     <h2>Classes</h2>
-                    {Object.keys(CLASS_LIST).map(characterClass => {
-                        const charClassName = `characterClass`
+                    {Object.keys(CLASS_LIST).map((characterClass) => {
+                        const charClassName = `characterClass ${classStatus[characterClass]}`;
                         return (
-                            <div key={characterClass} className={charClassName}>{characterClass}</div>
-                        )
+                            <div
+                                key={characterClass}
+                                className={charClassName}
+                            >
+                                {characterClass}
+                            </div>
+                        );
                     })}
                 </div>
             </section>
