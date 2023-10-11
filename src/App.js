@@ -21,6 +21,37 @@ function App() {
     console.log('attributeModifierValues', attributeModifierValues);
 
     useEffect(() => {
+        let newAttributeModifierValues = {};
+
+        ATTRIBUTE_LIST.forEach((attribute) => {
+            console.log('checking ', attribute);
+
+            const userAttrValue = getAttributeValue(attribute, attributeValues);
+
+            console.log('---- users value', userAttrValue);
+
+            // Intelligence: 7 -> Intelligence Modifier: -2
+            // Intelligence: 9 -> Intelligence Modifier: -1
+            // Intelligence: 10 -> Intelligence Modifier: 0
+            // Intelligence: 11 -> Intelligence Modifier: 0
+            // Intelligence: 12 -> Intelligence Modifier: 1
+            // Intelligence: 14 -> Intelligence Modifier: 2
+            // Intelligence: 20 -> Intelligence Modifier: 5
+
+            /**
+             * Note to reviewers: I'm not familiar with this aspect of DND so I looked up a more detailed description of how the modifiers work,
+             * and found this, which seems to line up with the README instructions and sample values for Intelligence:
+             *
+             * "To determine an ability modifier without consulting the table, subtract 10 from the ability score and then divide the total by 2 (round down)."
+             * https://roll20.net/compendium/dnd5e/Ability%20Scores#content
+             */
+            const modifierValue = Math.round((userAttrValue - 10) / 2 - 0.5);
+            console.log('---- modifierValue', modifierValue, '\n\n\n');
+            newAttributeModifierValues[attribute] = modifierValue;
+        });
+    }, [attributeValues]);
+
+    useEffect(() => {
         const characterClasses = Object.keys(CLASS_LIST);
 
         let updatedClassStatus = {};
