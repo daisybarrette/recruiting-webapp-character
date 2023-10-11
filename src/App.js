@@ -4,24 +4,15 @@ import { ATTRIBUTE_LIST, CLASS_LIST, SKILL_LIST } from './consts.js';
 
 function App() {
     const [attributeValues, setAttributeValues] = useState(ATTRIBUTE_LIST.map((attribute) => ({ [attribute]: 0 })));
-    // TODO: create definition for status options?
+
     const [classStatus, setClassStatus] = useState(
-        Object.keys(CLASS_LIST).reduce((acc, currentValue) => ({ ...acc, [currentValue]: 'disabled' }), {})
+        Object.keys(CLASS_LIST).reduce(
+            (acc, currentValue) => ({ ...acc, [currentValue]: CLASS_STATUS_OPTIONS.DISABLED }),
+            {}
+        )
     );
 
     const [selectedCharacterClass, setSelectedCharacterClass] = useState(null);
-
-    function handleUpdateAttributeValue(attribute, offset = 1) {
-        const updatedAttributeValues = [...attributeValues];
-
-        const attributeIndex = updatedAttributeValues.findIndex((element) => Object.keys(element).includes(attribute));
-
-        updatedAttributeValues[attributeIndex] = {
-            [attribute]: updatedAttributeValues[attributeIndex][attribute] + offset,
-        };
-
-        setAttributeValues(updatedAttributeValues);
-    }
 
     useEffect(() => {
         const characterClasses = Object.keys(CLASS_LIST);
@@ -39,14 +30,26 @@ function App() {
             });
 
             if (firstFailingAttribute) {
-                updatedClassStatus[characterClass] = 'disabled';
+                updatedClassStatus[characterClass] = CLASS_STATUS_OPTIONS.DISABLED;
             } else {
-                updatedClassStatus[characterClass] = 'enabled';
+                updatedClassStatus[characterClass] = CLASS_STATUS_OPTIONS.ENABLED;
             }
         });
 
         setClassStatus(updatedClassStatus);
     }, [attributeValues]);
+
+    function handleUpdateAttributeValue(attribute, offset = 1) {
+        const updatedAttributeValues = [...attributeValues];
+
+        const attributeIndex = updatedAttributeValues.findIndex((element) => Object.keys(element).includes(attribute));
+
+        updatedAttributeValues[attributeIndex] = {
+            [attribute]: updatedAttributeValues[attributeIndex][attribute] + offset,
+        };
+
+        setAttributeValues(updatedAttributeValues);
+    }
 
     function handleCharacterClassClick(characterClass) {
         if (selectedCharacterClass === characterClass) {
@@ -118,5 +121,10 @@ function getAttributeValue(attribute, attributeList) {
 
     return attributeList[attributeIndex][attribute];
 }
+
+const CLASS_STATUS_OPTIONS = {
+    ENABLED: 'enabled',
+    DISABLED: 'disabled',
+};
 
 export default App;
