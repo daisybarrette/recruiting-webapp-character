@@ -5,26 +5,13 @@ import { ATTRIBUTE_LIST, CLASS_LIST, SKILL_LIST } from './consts.js';
 function App() {
     const [attributeValues, setAttributeValues] = useState(ATTRIBUTE_LIST.map((attribute) => ({ [attribute]: 0 })));
 
-    function handleIncrementAttribute(attribute) {
+    function handleUpdateAttributeValue(attribute, offset = 1) {
         const updatedAttributeValues = [...attributeValues];
 
         const attributeIndex = updatedAttributeValues.findIndex((element) => Object.keys(element).includes(attribute));
 
         updatedAttributeValues[attributeIndex] = {
-            [attribute]: updatedAttributeValues[attributeIndex][attribute] + 1,
-        };
-
-        setAttributeValues(updatedAttributeValues);
-    }
-
-    // TODO: combine with increment function
-    function handleDecrementAttribute(attribute) {
-        const updatedAttributeValues = [...attributeValues];
-
-        const attributeIndex = updatedAttributeValues.findIndex((element) => Object.keys(element).includes(attribute));
-
-        updatedAttributeValues[attributeIndex] = {
-            [attribute]: updatedAttributeValues[attributeIndex][attribute] - 1,
+            [attribute]: updatedAttributeValues[attributeIndex][attribute] + offset,
         };
 
         setAttributeValues(updatedAttributeValues);
@@ -47,8 +34,8 @@ function App() {
                     {ATTRIBUTE_LIST.map((attribute) => (
                         <div key={attribute}>
                             {attribute}: {getAttributeValue(attribute)}
-                            <button onClick={() => handleIncrementAttribute(attribute)}>+</button>
-                            <button onClick={() => handleDecrementAttribute(attribute)}>-</button>
+                            <button onClick={() => handleUpdateAttributeValue(attribute)}>+</button>
+                            <button onClick={() => handleUpdateAttributeValue(attribute, -1)}>-</button>
                         </div>
                     ))}
                 </div>
